@@ -17,7 +17,6 @@ const HomePage = () => {
         </Link>
       </section>
 
-      {/* Como Funciona */}
       <section className="max-w-5xl mx-auto my-16 px-6">
         <h2 className="text-2xl font-semibold mb-6 text-center text-blue-600">Como Funciona</h2>
         <div className="grid md:grid-cols-3 gap-6">
