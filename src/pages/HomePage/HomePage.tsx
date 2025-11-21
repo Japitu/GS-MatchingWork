@@ -3,17 +3,16 @@ import { Link } from 'react-router-dom';
 const HomePage = () => {
   return (
     <main className="min-h-screen bg-slate-50 text-gray-800">
-      {/* Hero */}
       <section className="bg-blue-100 w-full py-16 px-6 text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-blue-800">Conecte Habilidades a Oportunidades!</h1>
         <p className="mb-8 text-lg max-w-2xl mx-auto">
           Nosso sistema usa tecnologia de ponta para unir profissionais a empresas ideais, valorizando seu real talento.
         </p>
         <Link
-          to="/cadastro"
+          to="/dashboard"
           className="bg-white text-blue-700 py-3 px-8 rounded-full font-bold border border-blue-200 hover:bg-blue-50 transition"
         >
-          Comece Agora
+          Experimentar
         </Link>
       </section>
 
