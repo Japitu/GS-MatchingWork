@@ -1,5 +1,6 @@
 import { useState } from "react";
 import imgPerfil from "../assets/PerfilPadrao.jpg";
+import useTheme from "../../../contexts/ThemeContext/useTheme";
 
 type Props = {
   onLogout: () => void;
@@ -11,7 +12,9 @@ const PerfilMenu: React.FC<Props> = ({
   userImgUrl,
 }) => {
   const [open, setOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // Simulação temporária
+  const { theme, changeTheme } = useTheme();
+  const darkMode = theme === "dark";
+
 
   const defaultImg = userImgUrl || imgPerfil;
 
@@ -26,11 +29,11 @@ const PerfilMenu: React.FC<Props> = ({
         <span>Username</span>
       </div>
       <button
-        className="p-1.5 rounded-full bg-gray-200 cursor-pointer hover:bg-gray-300 transition"
+        className="p-1.5 rounded-full cursor-pointer"
         onClick={() => setOpen((v) => !v)}
         aria-label="Abrir menu de opções"
       >
-        <svg height={24} width={24} viewBox="0 0 24 24" className="fill-gray-700">
+        <svg height={24} width={24} viewBox="0 0 24 24" className="fill-gray-100 hover:fill-gray-400 transition">
           <circle cx="12" cy="5" r="2" />
           <circle cx="12" cy="12" r="2" />
           <circle cx="12" cy="19" r="2" />
@@ -38,30 +41,30 @@ const PerfilMenu: React.FC<Props> = ({
       </button>
 
       {open && (
-        <div className="absolute left-0 bottom-full mb-4 z-50 w-56 bg-white rounded rounded-xl shadow-lg py-3 px-4 flex flex-col border border-gray-100">
-          {/* Linha modo claro/escuro + toggle */}
-          <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-50" onClick={() => setDarkMode((val) => !val)}>
-            <span className="text-blue-800 font-medium text-base" >
-              Modo Escuro
-            </span>
-            <button
-              type="button"
-              aria-checked={darkMode}
-              role="switch"
-              className={`relative ml-2 w-10 h-5 rounded-full transition cursor-pointer focus:outline-none ${
-                darkMode ? "bg-blue-700" : "bg-gray-300"
-              }`}
-              
-              style={{ minWidth: 40, minHeight: 20, padding: 0 }}
-            >
-              <span
-                className={`absolute left-1 top-1 h-3 w-3 rounded-full bg-white shadow transition-transform ${
-                  darkMode ? "translate-x-5" : ""
-                }`}
+        <div className="absolute left-0 bottom-full mb-4 z-50 w-56 bg-white rounded-xl shadow-lg py-3 px-4 flex flex-col border border-gray-100">
+          <label
+            htmlFor="darkModeSwitch"
+            className="flex items-center justify-between w-full mb-4 px-2 cursor-pointer select-none"
+          >
+            <span className="text-base font-medium text-blue-800">Modo Escuro</span>
+            <span className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors
+              ${darkMode ? "bg-blue-700" : "bg-gray-300"}
+            `}>
+              <input
+                id="darkModeSwitch"
+                type="checkbox"
+                checked={darkMode}
+                onChange={() => changeTheme(darkMode ? 'light' : 'dark')}
+                className="sr-only"
               />
-            </button>
-          </div>
-
+              <span
+                className={`inline-block h-6 w-6 bg-white rounded-full shadow transform transition-transform
+                  ${darkMode ? "translate-x-7" : "translate-x-1"}
+                `}
+                style={{ transition: "transform 0.2s" }}
+              />
+            </span>
+          </label>
 
           <button
             className="text-left px-4 py-2 hover:bg-red-50 text-red-700 cursor-pointer font-medium rounded"
@@ -73,6 +76,7 @@ const PerfilMenu: React.FC<Props> = ({
             Sair
           </button>
         </div>
+
       )}
     </div>
   );

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import useTheme from "../../contexts/ThemeContext/useTheme";
+import Project from "./components/Project";
 import PerfilMenu from "./components/PerfilMenu";
 
 
@@ -9,8 +11,12 @@ const DashboardPage = () => {
     const handleLogout = () => {
         navigate('/')
     }
+    const { theme } = useTheme();
+    const darkMode = theme === "dark";
 
   return (
+
+    
     <div className="flex h-screen" >
 
       <nav className="w-60 bg-blue-900 flex flex-col justify-between h-full text-white p-6">
@@ -36,13 +42,9 @@ const DashboardPage = () => {
         </div>
       </nav>
 
-      <main className="grow p-8 bg-gray-100 min-h-screen">
-        {selectedTab === 'projeto' /*&& 
-            <Project />*/
-        }
-        {selectedTab === 'Curso' /*&& 
-            <Curso />*/
-        }
+      <main className={`grow p-8 min-h-screen bg-gray-100 ${darkMode ? "bg-gray-900" : ""}`}>
+        {selectedTab === 'projeto' && <Project />}
+        {selectedTab === 'curso' /*&& <Curso />*/}
       </main>
     </div>
   );
