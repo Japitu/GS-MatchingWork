@@ -5,6 +5,7 @@ import Project from "./components/Project";
 import PerfilMenu from "./components/PerfilMenu";
 import Cursos from "./components/Curso";
 import CursoDetalhe from "./components/DetalheCurso";
+import VerCurso from "./components/VerCurso";
 
 const DashboardPage = () => {
   const [selectedTab, setSelectedTab] = useState("projeto");
@@ -54,6 +55,12 @@ const DashboardPage = () => {
             onClick={() => setSelectedTab("procurar")}
           >
             Procurar Projetos
+          </li>
+          <li
+            className={`cursor-pointer ${selectedTab === "verCurso" ? "font-bold underline" : "hover:underline"}`}
+            onClick={() => setSelectedTab("verCurso")}
+          >
+            Ver Cursos
           </li>
           <li
             className={`cursor-pointer ${selectedTab === "detalhes" ? "font-bold underline" : "hover:underline"}`}
@@ -123,6 +130,7 @@ const DashboardPage = () => {
         {selectedTab === "projeto" && <Project />}
         {selectedTab === "curso" && <Cursos />}
         {selectedTab === "detalhes" && <CursoDetalhe />}
+        {selectedTab === "verCurso" && <VerCurso />}
         {selectedTab === "procurar" /* && componente... */}
       </main>
     </div>
