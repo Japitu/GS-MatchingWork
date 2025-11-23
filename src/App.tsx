@@ -6,6 +6,7 @@ import ContactPage from './pages/ContactPage/ContactPage'
 import AboutPage from './pages/AboutPage/AboutPage'
 import ComHeader from './components/Layout/ComHeader'
 import SemHeader from './components/Layout/SemHeader'
+import DashboardPage from './pages/DashboardPage/DashboardPage'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
 
         {/*Páginas sem Header*/}
         <Route element={<SemHeader />}>
+          <Route path='/dashboard' element={<DashboardPage />} />
 
         </Route>
 

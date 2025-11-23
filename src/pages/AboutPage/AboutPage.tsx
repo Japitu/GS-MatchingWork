@@ -25,7 +25,7 @@ const AboutPage = () => {
                 </p>
             </section>
 
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl w-full ">
+            <section className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl w-full">
                 {/* Missão */}
                 <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border border-gray-100">
                     <h2 className="font-bold text-blue-700 text-2xl mb-2">Missão</h2>
