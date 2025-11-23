@@ -17,7 +17,7 @@ const cursosIniciais: Curso[] = [
 const Cursos = () => {
     const { theme } = useTheme();
     const darkMode = theme === "dark";
-    const [cursos, setCursos] = useState<Curso[]>(cursosIniciais);
+    const [cursos] = useState<Curso[]>(cursosIniciais);
 
   return (
     <div className={`max-w-5xl mx-auto p-6  ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50"} rounded-lg shadow`}>
@@ -25,21 +25,23 @@ const Cursos = () => {
       <table className={`min-w-full border-collapse border  ${darkMode ? "border-gray-700" : "border-gray-300"}`}>
         <thead>
           <tr className={`${darkMode ? "bg-gray-800" : "bg-gray-200"}`}>
-            <th className={`border  ${darkMode ? "border-gray-700" : "border-gray-300"} px-4 py-1.5 text-left`}>Nome</th>
-            <th className={`border  ${darkMode ? "border-gray-700" : "border-gray-300"} px-4 py-1.5 text-left`}>Descrição</th>
-            <th className={`border  ${darkMode ? "border-gray-700" : "border-gray-300"} px-4 py-1.5 text-left`}>Duração</th>
+            <th className={`border  ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1.5 text-left`}>Nome</th>
+            <th className={`border  ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1.5 text-left`}>Descrição</th>
+            <th className={`border  ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1.5 text-left`}>Duração</th>
           </tr>
         </thead>
         <tbody>
           {cursos.map((curso) => (
             <tr key={curso.id} className={`${darkMode ? "odd:bg-gray-800 even:bg-gray-700" : "odd:bg-white even:bg-gray-100"}`}>
-              <td className={`border ${darkMode ? "border-gray-700" : "border-gray-300"} px-4 py-1`}>{curso.nome}</td>
-              <td className={`border ${darkMode ? "border-gray-700" : "border-gray-300"} px-4 py-1`}>{curso.descricao}</td>
-              <td className={`border ${darkMode ? "border-gray-700" : "border-gray-300"} px-4 py-1`}>{curso.duracao}</td>
+              <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.nome}</td>
+              <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.descricao}</td>
+              <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.duracao}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
+    
     </div>
   );
 };
