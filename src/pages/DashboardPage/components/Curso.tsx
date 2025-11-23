@@ -53,6 +53,7 @@ const Cursos = () => {
       });
       const criado = await res.json();
       setCursos([...cursos, criado]);
+      console.table(cursos);
     }
     setForm({ nome: "", descricao: "", idHabilidade: 0 });
   };

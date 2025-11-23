@@ -18,6 +18,8 @@ const statusStyles: Record<StatusProjeto, string> = {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// ...imports, tipos, statusStyles, API_URL...
+
 const Project = () => {
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
   const [selectedEmpresa, setSelectedEmpresa] = useState<Empresa | null>(null);
@@ -25,10 +27,8 @@ const Project = () => {
   const { theme } = useTheme();
   const darkMode = theme === "dark";
 
-  // Carrega empresas ao iniciar
   useEffect(() => {
-    const url = `${API_URL}/projeto`;
-    fetch(url)
+    fetch(`${API_URL}/projeto`)
       .then(res => res.json())
       .then(data => setEmpresas(data))
       .catch(err => console.log("Erro ao carregar empresas:", err));
@@ -52,36 +52,42 @@ const Project = () => {
 
   // Salvar
   const handleSalvar = async (empresa: Empresa) => {
-  const payload = {
-    nome: empresa.nome,
-    descricao: empresa.descricao,
-    status: empresa.status
+    let resposta: Empresa;
+
+    if (empresa.id) {
+      // Atualizar existente, enviando OBRIGATORIAMENTE o id no corpo
+      const payload = {
+        id: empresa.id,
+        nome: empresa.nome,
+        descricao: empresa.descricao,
+        status: empresa.status
+      };
+      const res = await fetch(`${API_URL}/projeto/${empresa.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      resposta = await res.json();
+      // Atualiza pelo id correto da resposta e não adiciona novo
+      setEmpresas(empresas.map(e => e.id === resposta.id ? resposta : e));
+    } else {
+      // Criar novo (sem id)
+      const payload = {
+        nome: empresa.nome,
+        descricao: empresa.descricao,
+        status: empresa.status
+      };
+      const res = await fetch(`${API_URL}/projeto`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      resposta = await res.json();
+      setEmpresas([...empresas, resposta]);
+    }
+    setModoEdicao(false);
+    setSelectedEmpresa(null);
   };
-
-  let resposta: Empresa;
-  if (empresa.id) {
-    // Atualizar existente
-    const res = await fetch(`${API_URL}/projeto/${empresa.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    resposta = await res.json();
-    setEmpresas(empresas.map(e => e.id === empresa.id ? resposta : e));
-  } else {
-    // Criar novo
-    const res = await fetch(`${API_URL}/projeto`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    resposta = await res.json();
-    setEmpresas([...empresas, resposta]);
-  }
-  setModoEdicao(false);
-  setSelectedEmpresa(null);
-};
-
 
   return (
     <div className={`min-h-screen w-full max-w-7xl mx-auto p-4 md:p-6 flex flex-col ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50"}`}>
@@ -136,7 +142,6 @@ interface FormProps {
 }
 
 function FormEmpresa({ empresa, onSalvar, onCancelar }: FormProps) {
-  
   const [nome, setNome] = useState(empresa.nome);
   const [descricao, setDescricao] = useState(empresa.descricao);
   const [status, setStatus] = useState<StatusProjeto>(empresa.status);
