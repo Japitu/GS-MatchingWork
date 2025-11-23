@@ -96,7 +96,7 @@ const Cursos = () => {
         />
         <input
           type="number"
-          name="idHabilidade"
+          name="habilidadeId"
           value={form.habilidadeId}
           onChange={handleChange}
           placeholder="ID da Habilidade"
