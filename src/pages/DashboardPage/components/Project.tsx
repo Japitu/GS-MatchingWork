@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useTheme from "../../../contexts/ThemeContext/useTheme";
 
-type StatusProjeto = "Aberto" | "Agendado" | "Pendente" | "Concluido";
+type StatusProjeto = "ABERTO" | "AGENDADO" | "CONCLUIDO";
 
 interface Empresa {
   id: number;
@@ -11,10 +11,9 @@ interface Empresa {
 }
 
 const statusStyles: Record<StatusProjeto, string> = {
-  Aberto: "bg-green-500 text-white",
-  Agendado: "bg-blue-500 text-white",
-  Pendente: "bg-yellow-500 text-black",
-  Concluido: "bg-gray-400 text-white"
+  ABERTO: "bg-green-500 text-white",
+  AGENDADO: "bg-blue-500 text-white",
+  CONCLUIDO: "bg-gray-400 text-white"
 };
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -25,10 +24,11 @@ const Project = () => {
   const [modoEdicao, setModoEdicao] = useState(false);
   const { theme } = useTheme();
   const darkMode = theme === "dark";
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Carrega empresas ao iniciar
   useEffect(() => {
-    const url = `${API_URL}/projeto`
+    const url = `${API_URL}/projeto`;
     fetch(url)
       .then(res => res.json())
       .then(data => setEmpresas(data))
@@ -43,7 +43,7 @@ const Project = () => {
 
   // Excluir
   const handleExcluir = async (id: number) => {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/projeto/${id}`, { method: "DELETE" });
     setEmpresas(empresas.filter(e => e.id !== id));
     if (selectedEmpresa?.id === id) {
       setSelectedEmpresa(null);
@@ -53,74 +53,83 @@ const Project = () => {
 
   // Salvar
   const handleSalvar = async (empresa: Empresa) => {
-    let resposta: Empresa;
-    if (empresa.id) {
-      // Atualizar existente
-      const res = await fetch(`${API_URL}/${empresa.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(empresa)
-      });
-      resposta = await res.json();
-      setEmpresas(empresas.map(e => e.id === empresa.id ? resposta : e));
-    } else {
-      // Criar novo
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(empresa)
-      });
-      resposta = await res.json();
-      setEmpresas([...empresas, resposta]);
-    }
-    setModoEdicao(false);
-    setSelectedEmpresa(null);
+  const payload = {
+    nome: empresa.nome,
+    descricao: empresa.descricao,
+    status: empresa.status
   };
 
+  let resposta: Empresa;
+  if (empresa.id) {
+    // Atualizar existente
+    const res = await fetch(`${API_URL}/projeto/${empresa.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    resposta = await res.json();
+    setEmpresas(empresas.map(e => e.id === empresa.id ? resposta : e));
+  } else {
+    // Criar novo
+    const res = await fetch(`${API_URL}/projeto`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    resposta = await res.json();
+    setEmpresas([...empresas, resposta]);
+  }
+  setModoEdicao(false);
+  setSelectedEmpresa(null);
+};
+
+
   return (
-    <div className={`min-h-screen max-w-5xl mx-auto p-6 ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50"} `}>
-      <h2 className="text-2xl font-semibold mb-6">Projetos / Empresas</h2>
-      <div className="grid md:grid-cols-3 gap-6 mb-6">
-        {empresas.map(emp => (
-          <div key={emp.id} className={`p-4 rounded shadow flex flex-col justify-between border ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}>
-            <div className="flex items-center justify-between mb-1 gap-2">
-              <h3 className={`font-bold text-lg ${darkMode ? "text-blue-200" : ""}`}>{emp.nome}</h3>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyles[emp.status] ?? "bg-gray-300 text-black"}`}>
-                {emp.status}
-              </span>
+    <div className={`min-h-screen w-full max-w-7xl mx-auto p-4 md:p-6 flex flex-col ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50"}`}>
+      <div className="md:ml-64">
+        <h2 className="text-2xl font-semibold mb-6">Projetos / Empresas</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          {empresas.map(emp => (
+            <div key={emp.id} className={`p-4 rounded shadow flex flex-col justify-between border min-w-0 wrap-break-word
+              ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}>
+              <div className="flex items-center justify-between mb-1 gap-2">
+                <h3 className={`font-bold text-lg ${darkMode ? "text-blue-200" : ""}`}>{emp.nome}</h3>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyles[emp.status] ?? "bg-gray-300 text-black"}`}>
+                  {emp.status}
+                </span>
+              </div>
+              <p className={`${darkMode ? "text-gray-300" : " text-gray-600"}`}>{emp.descricao}</p>
+              <div className="mt-4 flex justify-between">
+                <button onClick={() => handleEditar(emp)} className={`cursor-pointer ${darkMode ? "text-blue-300": "text-blue-600"} hover:underline`}>
+                  Editar
+                </button>
+                <button onClick={() => handleExcluir(emp.id)} className={`cursor-pointer ${darkMode ? "text-red-400": "text-red-600"} hover:underline`}>
+                  Excluir
+                </button>
+              </div>
             </div>
-            <p className={`${darkMode ? "text-gray-300" : " text-gray-600"}`}>{emp.descricao}</p>
-            <div className="mt-4 flex justify-between">
-              <button onClick={() => handleEditar(emp)} className={`cursor-pointer ${darkMode ? "text-blue-300": "text-blue-600"} hover:underline`}>
-                Editar
-              </button>
-              <button onClick={() => handleExcluir(emp.id)} className={`cursor-pointer ${darkMode ? "text-red-400": "text-red-600"} hover:underline`}>
-                Excluir
-              </button>
-            </div>
-          </div>
-        ))}
-        <button
-          onClick={() => {
-            setSelectedEmpresa({ id: 0, nome: "", descricao: "", status: "Aberto" });
-            setModoEdicao(true);
-          }}
-          className={`border-dashed border-2 cursor-pointer
-            ${darkMode ? "border-gray-500 text-gray-300 hover:bg-gray-950" : "border-gray-400 text-gray-500 hover:bg-gray-100"}
-            rounded flex items-center justify-center text-lg`}
-          style={{ height: "150px" }}
-        >
-          + Criar Novo
-        </button>
+          ))}
+          <button
+            onClick={() => {
+              setSelectedEmpresa({ id: 0, nome: "", descricao: "", status: "ABERTO" });
+              setModoEdicao(true);
+            }}
+            className={`border-dashed border-2 cursor-pointer
+              ${darkMode ? "border-gray-500 text-gray-300 hover:bg-gray-950" : "border-gray-400 text-gray-500 hover:bg-gray-100"}
+              rounded flex items-center justify-center text-lg`}
+            style={{ height: "150px" }}
+          >
+            + Criar Novo
+          </button>
+        </div>
+        {modoEdicao && selectedEmpresa && (
+          <FormEmpresa empresa={selectedEmpresa} onSalvar={handleSalvar} onCancelar={() => setModoEdicao(false)} />
+        )}
       </div>
-      {modoEdicao && selectedEmpresa && (
-        <FormEmpresa empresa={selectedEmpresa} onSalvar={handleSalvar} onCancelar={() => setModoEdicao(false)} />
-      )}
     </div>
   );
 };
 
-// Formulário
 interface FormProps {
   empresa: Empresa;
   onSalvar: (empresa: Empresa) => void;
@@ -128,9 +137,11 @@ interface FormProps {
 }
 
 function FormEmpresa({ empresa, onSalvar, onCancelar }: FormProps) {
+  
   const [nome, setNome] = useState(empresa.nome);
   const [descricao, setDescricao] = useState(empresa.descricao);
   const [status, setStatus] = useState<StatusProjeto>(empresa.status);
+
   const { theme } = useTheme();
   const darkMode = theme === "dark";
 
@@ -169,10 +180,9 @@ function FormEmpresa({ empresa, onSalvar, onCancelar }: FormProps) {
           value={status}
           onChange={e => setStatus(e.target.value as StatusProjeto)}
         >
-          <option value="Aberto">Aberto</option>
-          <option value="Agendado">Agendado</option>
-          <option value="Pendente">Pendente</option>
-          <option value="Concluido">Concluido</option>
+          <option value="ABERTO">Aberto</option>
+          <option value="AGENDADO">Agendado</option>
+          <option value="CONCLUIDO">Concluido</option>
         </select>
       </div>
       <div className="flex justify-end space-x-4">
