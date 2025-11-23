@@ -5,7 +5,7 @@ interface Curso {
   id: number;
   nome: string;
   descricao: string;
-  idHabilidade: number;
+  habilidadeId: number;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -14,7 +14,7 @@ const Cursos = () => {
   const { theme } = useTheme();
   const darkMode = theme === "dark";
   const [cursos, setCursos] = useState<Curso[]>([]);
-  const [form, setForm] = useState<Omit<Curso, "id">>({ nome: "", descricao: "", idHabilidade: 0 });
+  const [form, setForm] = useState<Omit<Curso, "id">>({ nome: "", descricao: "", habilidadeId: 0 });
   const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Cursos = () => {
     const payload = {
       nome: form.nome,
       descricao: form.descricao,
-      idHabilidade: Number(form.idHabilidade)
+      idHabilidade: Number(form.habilidadeId)
     };
 
     if (editingId !== null) {
@@ -55,11 +55,11 @@ const Cursos = () => {
       setCursos([...cursos, criado]);
       console.table(cursos);
     }
-    setForm({ nome: "", descricao: "", idHabilidade: 0 });
+    setForm({ nome: "", descricao: "", habilidadeId: 0 });
   };
 
   const handleEdit = (curso: Curso) => {
-    setForm({ nome: curso.nome, descricao: curso.descricao, idHabilidade: curso.idHabilidade });
+    setForm({ nome: curso.nome, descricao: curso.descricao, habilidadeId: curso.habilidadeId });
     setEditingId(curso.id);
   };
 
@@ -68,7 +68,7 @@ const Cursos = () => {
     setCursos(cursos.filter(c => c.id !== id));
     if (editingId === id) {
       setEditingId(null);
-      setForm({ nome: "", descricao: "", idHabilidade: 0 });
+      setForm({ nome: "", descricao: "", habilidadeId: 0 });
     }
   };
 
@@ -97,7 +97,7 @@ const Cursos = () => {
         <input
           type="number"
           name="idHabilidade"
-          value={form.idHabilidade}
+          value={form.habilidadeId}
           onChange={handleChange}
           placeholder="ID da Habilidade"
           className="px-3 py-2 rounded border"
@@ -108,7 +108,7 @@ const Cursos = () => {
           {editingId !== null ? "Salvar Edição" : "Cadastrar"}
         </button>
         {editingId !== null && (
-          <button type="button" onClick={() => {setEditingId(null); setForm({ nome: "", descricao: "", idHabilidade: 0 });}} className="px-4 py-2 rounded bg-gray-400 text-white">
+          <button type="button" onClick={() => {setEditingId(null); setForm({ nome: "", descricao: "", habilidadeId: 0 });}} className="px-4 py-2 rounded bg-gray-400 text-white">
             Cancelar
           </button>
         )}
@@ -127,7 +127,7 @@ const Cursos = () => {
             <tr key={curso.id} className={`${darkMode ? "odd:bg-gray-800 even:bg-gray-700" : "odd:bg-white even:bg-gray-100"}`}>
               <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.nome}</td>
               <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.descricao}</td>
-              <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.idHabilidade}</td>
+              <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1`}>{curso.habilidadeId}</td>
               <td className={`border ${darkMode ? "border-gray-600" : "border-gray-300"} px-4 py-1 flex gap-2`}>
                 <button onClick={() => handleEdit(curso)} className={`text-blue-600 hover:underline`}>Editar</button>
                 <button onClick={() => handleDelete(curso.id)} className={`text-red-600 hover:underline`}>Excluir</button>
