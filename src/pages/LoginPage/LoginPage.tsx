@@ -80,7 +80,7 @@ const LoginPage = () => {
           )}
           <button
             type="submit"
-            className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold uppercase tracking-wide px-6 py-3 rounded-xl shadow-lg transition w-full"
+            className="bg-linear-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold uppercase tracking-wide px-6 py-3 rounded-xl shadow-lg transition w-full"
           >
             Entrar
           </button>
@@ -92,7 +92,6 @@ const LoginPage = () => {
             Acessar Teste
           </Link>
         </div>
-
       </div>
     </div>
   );
