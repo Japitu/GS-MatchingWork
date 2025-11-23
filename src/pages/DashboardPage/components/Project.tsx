@@ -24,7 +24,6 @@ const Project = () => {
   const [modoEdicao, setModoEdicao] = useState(false);
   const { theme } = useTheme();
   const darkMode = theme === "dark";
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Carrega empresas ao iniciar
   useEffect(() => {

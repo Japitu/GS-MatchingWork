@@ -39,6 +39,12 @@ const DashboardPage = () => {
           >
             Projetos
           </li>
+          <li
+            className={`cursor-pointer ${selectedTab === "curso" ? "font-bold underline" : "hover:underline"}`}
+            onClick={() => setSelectedTab("curso")}
+          >
+            Cursos
+          </li>
         </ul>
         {/* Usuario */}
         <h2 className="text-white font-bold mb-3 mt-4">Usuario</h2>
@@ -48,12 +54,6 @@ const DashboardPage = () => {
             onClick={() => setSelectedTab("procurar")}
           >
             Procurar Projetos
-          </li>
-          <li
-            className={`cursor-pointer ${selectedTab === "curso" ? "font-bold underline" : "hover:underline"}`}
-            onClick={() => setSelectedTab("curso")}
-          >
-            Cursos
           </li>
           <li
             className={`cursor-pointer ${selectedTab === "detalhes" ? "font-bold underline" : "hover:underline"}`}
